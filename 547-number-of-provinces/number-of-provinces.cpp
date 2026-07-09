@@ -34,7 +34,7 @@ class DisjointSet{
     int connected(){
 
         int ans=0;
-        for(int  i=0;i<parent.size();i++){
+        for(int  i=0;i<parent.size()-1;i++){
             if(parent[i]==i) ans++;
         }
         return ans;
@@ -57,6 +57,6 @@ public:
             }
             
          }
-         return ds.connected()-1;
+         return ds.connected();
     }
 };
