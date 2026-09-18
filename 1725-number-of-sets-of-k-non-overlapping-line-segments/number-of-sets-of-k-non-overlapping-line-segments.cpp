@@ -8,16 +8,16 @@ public:
           dp[0][i]=1;
        }
        for(int k=1;k<=K;k++){
-             
-            vector<int> prevRowSum(n+1,0);
-            for(int x=n-1;x>=0;x--){
-                 prevRowSum[x]=(prevRowSum[x+1]+dp[k-1][x])%M;
-            }
+            int s=0;
               
               for(int i=n-1;i>=0;i--){
                 
-                int take=prevRowSum[i+1]%M;
-                
+                int take=0;
+                // for(int j=i+1;j<=n-1;j++){
+                    // take=(take+dp[k-1][j])%M;
+                    take=(take+s)%M;
+                    s=(s+dp[k-1][i])%M;
+                // }
                 int skip=dp[k][i+1]%M;
                 dp[k][i]=(take+skip)%M;
               }
