@@ -12,8 +12,6 @@ public:
 
             
             if(new_r>=0&&new_r<=n-1&&new_c>=0&&new_c<=m-1&&grid[new_r][new_c]==0){
-
-                
                 dfs(grid,n,m,new_r,new_c);
             }
 
