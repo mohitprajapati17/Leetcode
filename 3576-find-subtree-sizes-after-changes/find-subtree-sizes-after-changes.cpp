@@ -1,27 +1,32 @@
 class Solution {
 public:
     vector<vector<int>> adj;
-    vector<int> ans;
-    vector<int> last = vector<int>(26, -1);
+    vector<int> ans, last;
 
-    void dfs(int node, string& s) {
+    void findNewParent(int node, string& s, vector<int>& np) {
         int c = s[node] - 'a';
 
         int prev = last[c];
 
+        if (prev != -1) np[node] = prev;
+
         last[c] = node;
 
         for (int child : adj[node]) {
-            dfs(child, s);
-        }
-
-        ans[node] = 1;
-
-        for (int child : adj[node]) {
-            ans[node] += ans[child];
+            findNewParent(child, s, np);
         }
 
         last[c] = prev;
+    }
+
+    int dfs(int node) {
+        int sz = 1;
+
+        for (int child : adj[node]) {
+            sz += dfs(child);
+        }
+
+        return ans[node] = sz;
     }
 
     vector<int> findSubtreeSizes(vector<int>& parent, string s) {
@@ -29,41 +34,23 @@ public:
 
         adj.assign(n, {});
         ans.assign(n, 0);
+        last.assign(26, -1);
 
         for (int i = 1; i < n; i++) {
             adj[parent[i]].push_back(i);
         }
 
-        vector<int> newParent = parent;
+        vector<int> np = parent;
 
-        function<void(int)> findParents = [&](int node) {
-            int c = s[node] - 'a';
-
-            if (last[c] != -1) {
-                newParent[node] = last[c];
-            }
-
-            int prev = last[c];
-            last[c] = node;
-
-            for (int child : adj[node]) {
-                findParents(child);
-            }
-
-            last[c] = prev;
-        };
-
-        findParents(0);
+        findNewParent(0, s, np);
 
         adj.assign(n, {});
 
         for (int i = 1; i < n; i++) {
-            adj[newParent[i]].push_back(i);
+            adj[np[i]].push_back(i);
         }
 
-        fill(last.begin(), last.end(), -1);
-
-        dfs(0, s);
+        dfs(0);
 
         return ans;
     }
